@@ -27,7 +27,7 @@ class Cart with ChangeNotifier {
       _items.update(productId, (existngCartItem) =>
           CartItem(id: existngCartItem.id,
               title: existngCartItem.title,
-              quantity: existngCartItem + 1,
+              quantity: existngCartItem.quantity + 1,
               price: existngCartItem.price));
     } else {
       _items.putIfAbsent(productId, () =>
