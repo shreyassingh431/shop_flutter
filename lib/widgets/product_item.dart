@@ -12,40 +12,43 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: true);
-    return Consumer<Product>(
-      builder: (context, product, child) => ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: GridTile(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(ProductDetailsScreen.routeName,
-                  arguments: product.id);
-            },
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
-            ),
+    final product = Provider.of<Product>(context, listen: false); // here listen is false so that only widget inside consumer must adapt change.
+    print("if listen is true, i will be print");
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: GridTile(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(ProductDetailsScreen.routeName, arguments: product.id);
+          },
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
           ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black87,
-            leading: IconButton(
+        ),
+        footer: GridTileBar(
+          backgroundColor: Colors.black87,
+          leading: Consumer<Product>( //Consumer takes builder defined below
+            builder: (ctx, product, _) =>
+                IconButton(
                 icon: Icon(product.isFavorite
                     ? Icons.favorite
                     : Icons.favorite_border),
+
                 color: Theme.of(context).accentColor,
                 onPressed: () {
                   product.toggleFavoriteStatus();
                 }),
-            title: Text(
-              product.title,
-              textAlign: TextAlign.center,
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.shopping_cart),
-                color: Theme.of(context).accentColor,
-                onPressed: () {}),
+            //child: Text('Never Changes'),
           ),
+          title: Text(
+            product.title,
+            textAlign: TextAlign.center,
+          ),
+          trailing: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              color: Theme.of(context).accentColor,
+              onPressed: () {}),
         ),
       ),
     );
